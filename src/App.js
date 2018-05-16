@@ -3,9 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 
 const fakeAxios = {
-  get() {
+  get(url, ms = 1000) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ data: 7 }), 1000)
+      setTimeout(() => resolve({ data: 7 }), ms)
       // setTimeout(() => reject(new Error('my error message')), 1000)
     })
   }
@@ -20,9 +20,10 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const { data: coords } = await fakeAxios.get(`getcoords.com/api`)
-    console.log('hello')
-    const { data: zipCode } = await fakeAxios.get(`getZipcode.com/${coords}`)
+    const coordsPromise = fakeAxios.get(`getcoords.com/api`)
+    const statePromise = fakeAxios.get(`getstate.com/api`, 1500)
+    const [coords, state] = await Promise.all([coordsPromise, statePromise])
+    const { data: zipCode } = await fakeAxios.get(`getZipcode.com/${coords}/${state}`)
     const { data: weatherData } = await fakeAxios.get(`getWeather.com/${zipCode}`)
     this.setState({ data: weatherData })
   }
