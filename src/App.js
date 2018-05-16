@@ -20,13 +20,24 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fakeAxios.get('some fake url').then(response => {
-      console.log('inside promise')
+    // fakeAxios.get(`getcoords.com/api`).then(response => {
+    //   const coords = response.data.coords
+    //   fakeAxios.get(`zipcode.com/api/${coords}`).then(response => {
+    //     const zipCode = response.data.zipCode
+    //     fakeAxios.get(`getweather.com/api/${zipCode}`).then(response => {
+    //       this.setState({ data: response.data })
+    //     })
+    //   })
+    // })
+    fakeAxios.get(`getcoords.com/api`).then(response => {
+      const coords = response.data.coords
+      return fakeAxios.get(`zipcode.com/api/${coords}`)
+    }).then(response => {
+      const zipCode = response.data.zipCode
+      return fakeAxios.get(`getweather.com/api/${zipCode}`)
+    }).then(response => {
       this.setState({ data: response.data })
-    }).catch(error => {
-      console.error('error happened', error)
     })
-    console.log('after promise')
   }
 
   render() {
