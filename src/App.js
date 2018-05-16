@@ -29,13 +29,16 @@ class App extends Component {
     //     })
     //   })
     // })
-    fakeAxios.get(`getcoords.com/api`).then(response => {
+    const promise1 = fakeAxios.get(`getcoords.com/api`)
+    const promise2 = promise1.then(response => {
       const coords = response.data.coords
       return fakeAxios.get(`zipcode.com/api/${coords}`)
-    }).then(response => {
+    })
+    const promise3 = promise2.then(response => {
       const zipCode = response.data.zipCode
       return fakeAxios.get(`getweather.com/api/${zipCode}`)
-    }).then(response => {
+    })
+    const promise4 = promise3.then(response => {
       this.setState({ data: response.data })
     })
   }
